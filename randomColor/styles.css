@@ -1,0 +1,30 @@
+/* FONTS TYPE AND SIZE */
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');    
+@import url('https://fonts.googleapis.com/css2?family=Armata&display=swap');
+
+:root {
+
+    /* Neutral */
+    --neutral: #102B3F;
+  
+    /* Primary */
+    --primary: #BE3455;
+  
+    /* Accent */
+    --accent: #FFDCCC;
+
+}
+
+.bgPrimary{
+    background-color: var(--primary);
+}
+
+.bgAccent{
+    background-color: var(--accent);
+}
+
+.bgNeutral{
+    background-color: var(--neutral);
+}
+
