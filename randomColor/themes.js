@@ -1,3 +1,4 @@
+
 function generateRandomColor() {
     const maxVal = 0xFFFFFF; // 16777215
     let randomNumber = Math.random() * maxVal;
@@ -46,9 +47,9 @@ function generateRandomColor() {
   // Generate three random background colors
   // Outputs a random color code like "#A1B2C3"
 
-  const color1 = generateRandomColor();
-  const color2 = generateRandomColor();
-  const color3 = generateRandomColor();
+  let color1 = generateRandomColor();
+  let color2 = generateRandomColor();
+  let color3 = generateRandomColor();
   
   // Specify a text color
   const foreground = '#000000'; // For example, black
@@ -78,11 +79,6 @@ function generateRandomColor() {
     document.getElementById('color3').style.color = contrastRatio1 >= 5 ? '#212121' : '#FBFCF8';
 
 
-
-
-
-
-
 // COLORS
 
 const themes = [
@@ -92,20 +88,6 @@ const themes = [
       accent: color2,
       neutral: color3
     }
-
-    // ,
-    // {
-    //   name: 'theme2',
-    //   primary: '#253031',
-    //   accent: '#2978A0',
-    //   neutral: '#8DAA91'
-    // },
-    // {
-    //   name: 'theme3',
-    //   primary: '#343a40',
-    //   accent: '#EE7DFF',
-    //   neutral: '#cccccc'
-    // }
   ];
 
 // RANDOM THEME
@@ -121,6 +103,65 @@ function setRandomTheme() {
     root.style.setProperty('--neutral', randomTheme.neutral);
   }
 
+
+
+// Function to change the theme color
+function changeThemeColor() {
+  // Generate a new random color
+  let newColor1 = generateRandomColor();
+  let newColor2 = generateRandomColor();
+  let newColor3 = generateRandomColor();
+
+
+// assign color to newColor 
+
+
+  let color1 = newColor1;
+  let color2 = newColor2;
+  let color3 = newColor3;
+
+
+  // Display the results
+  console.log('Background 1:', color1);
+  console.log('Contrast ratio 1:', contrastRatio1);
+  console.log('Background 2:', color2);
+  console.log('Contrast ratio 2:', contrastRatio2);
+  console.log('Background 3:', color3);
+  console.log('Contrast ratio 3:', contrastRatio3);
+
+
+  // Update the theme color
+  const root = document.documentElement;
+  root.style.setProperty('--primary', newColor1);
+  root.style.setProperty('--accent', newColor2);
+  root.style.setProperty('--neutral', newColor3);
+
+  
+
+  // Update any other elements that need to reflect the new color
+  // For example, if you have a text element with ID 'color1'
+  document.getElementById('color1').textContent = newColor1;
+  document.getElementById('color1').style.color = getContrastRatio(newColor1, foreground) >= 5 ? '#212121' : '#FBFCF8';
+  document.getElementById('color2').textContent = newColor2;
+  document.getElementById('color2').style.color = getContrastRatio(newColor2, foreground) >= 5 ? '#212121' : '#FBFCF8';
+  document.getElementById('color3').textContent = newColor3;
+  document.getElementById('color3').style.color = getContrastRatio(newColor3, foreground) >= 5 ? '#212121' : '#FBFCF8';
+  
+}
+
+// Add event listener to the button
+const themeButton = document.getElementById('themeButton');
+themeButton.addEventListener('click', changeThemeColor);
+
+
 // RANDOM ON WINDOW LOAD
 
 window.addEventListener('load', setRandomTheme);
+
+// Change themes on spacebar press
+document.addEventListener('keydown', (event) => {
+  if (event.code === 'Space') {
+    event.preventDefault(); // Prevent default behavior of spacebar (scrolling)
+    changeThemeColor ();
+  }
+});
