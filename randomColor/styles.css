@@ -137,6 +137,7 @@ HERO
     background-color: var(--accent);
     mix-blend-mode: normal;
     opacity: 0.85;
+    color: var(--accent-contrast);
   }
   
   /*

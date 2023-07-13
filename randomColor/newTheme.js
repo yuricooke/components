@@ -93,5 +93,8 @@ function changeColor(elementId) {
   console.log(`New ${elementId}:`, color);
 }
 
-
-
+$(document).ready(function () {
+  $('#ex1 a[data-mdb-toggle="pill"]').on('shown.bs.tab', function (e) {
+    // Do something when a pill is shown
+  });
+});
