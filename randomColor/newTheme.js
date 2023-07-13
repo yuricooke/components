@@ -6,98 +6,23 @@ function generateRandomColor() {
   return `#${randColor.toUpperCase()}`;
 }
 
-const foreground = "#000000"; // For example, black
-
-
-function getContrastRatio(background, foreground) {
-  function hexToRgb(hex) {
-    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16),
-        }
-      : null;
-  }
-
-  function calculateRelativeLuminance(rgb) {
-    const { r, g, b } = rgb;
-    const sRGB = [r / 255, g / 255, b / 255];
-    const sRGBAdjusted = sRGB.map((c) =>
-      c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
-    );
-    const luminance =
-      0.2126 * sRGBAdjusted[0] +
-      0.7152 * sRGBAdjusted[1] +
-      0.0722 * sRGBAdjusted[2];
-    return luminance;
-  }
-
-  const backgroundRgb = hexToRgb(background);
-  const foregroundRgb = hexToRgb(foreground);
-
-  const backgroundLuminance = calculateRelativeLuminance(backgroundRgb);
-  const foregroundLuminance = calculateRelativeLuminance(foregroundRgb);
-
-  const contrastRatio =
-    (backgroundLuminance + 0.05) / (foregroundLuminance + 0.05);
-
-  return contrastRatio;
-}
-
-function updateElementColor(elementId, color, foreground) {
-  const contrastRatio = getContrastRatio(color, foreground);
-  const element = document.getElementById(elementId);
-  element.textContent = color;
-  element.style.color = contrastRatio >= 5 ? "#212121" : "#FBFCF8";
-}
-
-function updateThemeColors(color1, color2, color3, foreground) {
-  const root = document.documentElement;
-  root.style.setProperty("--primary", color1);
-  root.style.setProperty("--accent", color2);
-  root.style.setProperty("--neutral", color3);
-
-  updateElementColor("color1", color1, foreground);
-  updateElementColor("color2", color2, foreground);
-  updateElementColor("color3", color3, foreground);
-}
-
 function newThemeColor() {
   let color1 = generateRandomColor();
   let color2 = generateRandomColor();
   let color3 = generateRandomColor();
+  
+  updateThemeColors(color1, color2, color3);
 
-  updateThemeColors(color1, color2, color3, foreground);
-
+  document.getElementById('color1').textContent = color1;
+  document.getElementById('color2').textContent = color2;
+  document.getElementById('color3').textContent = color3;
+  
   console.log("New color 1:", color1);
   console.log("New color 2:", color2);
   console.log("New color 3:", color3);
+  
 }
 
-function changeColor(elementId) {
-  let color;
-  if (elementId === "color1") {
-    color = generateRandomColor();
-    color1 = color;
-    document.documentElement.style.setProperty(`--primary`, color);
-  } else if (elementId === "color2") {
-    color = generateRandomColor();
-    color2 = color;
-    document.documentElement.style.setProperty(`--accent`, color);
-  } else if (elementId === "color3") {
-    color = generateRandomColor();
-    color3 = color;
-    document.documentElement.style.setProperty(`--neutral`, color);
-  }
-
-  updateElementColor(elementId, color, foreground);
-
-  console.log(`New ${elementId}:`, color);
-}
 
 window.addEventListener("load", newThemeColor);
 document.addEventListener("keydown", (event) => {
@@ -106,4 +31,67 @@ document.addEventListener("keydown", (event) => {
     newThemeColor();
   }
 });
+
+
+function calculateContrastColor(color) {
+  // Convert color to RGB components
+  const r = parseInt(color.substr(1, 2), 16);
+  const g = parseInt(color.substr(3, 2), 16);
+  const b = parseInt(color.substr(5, 2), 16);
+
+  // Calculate color brightness using relative luminance formula
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+  // Determine contrast color based on brightness
+  return brightness > 128 ? "#000000" : "#FFFFFF";
+}
+
+
+function updateThemeColors(color1, color2, color3) {
+  const root = document.documentElement;
+  root.style.setProperty("--primary", color1);
+  root.style.setProperty("--accent", color2);
+  root.style.setProperty("--neutral", color3);
+
+  const primaryContrast = calculateContrastColor(color1);
+  const accentContrast = calculateContrastColor(color2);
+  const neutralContrast = calculateContrastColor(color3);
+
+  root.style.setProperty("--primary-contrast", primaryContrast);
+  root.style.setProperty("--accent-contrast", accentContrast);
+  root.style.setProperty("--neutral-contrast", neutralContrast);
+}
+
+function changeColor(elementId) {
+  let color;
+  if (elementId === "color1") {
+    color = generateRandomColor();
+    color1 = color;
+    document.documentElement.style.setProperty("--primary", color);
+    document.getElementById('color1').textContent = color1;
+
+    const primaryContrast = calculateContrastColor(color1);
+    document.documentElement.style.setProperty("--primary-contrast", primaryContrast);
+  } else if (elementId === "color2") {
+    color = generateRandomColor();
+    color2 = color;
+    document.documentElement.style.setProperty("--accent", color);
+    document.getElementById('color2').textContent = color2;
+
+    const accentContrast = calculateContrastColor(color2);
+    document.documentElement.style.setProperty("--accent-contrast", accentContrast);
+  } else if (elementId === "color3") {
+    color = generateRandomColor();
+    color3 = color;
+    document.documentElement.style.setProperty("--neutral", color);
+    document.getElementById('color3').textContent = color3;
+
+    const neutralContrast = calculateContrastColor(color3);
+    document.documentElement.style.setProperty("--neutral-contrast", neutralContrast);
+  }
+
+  console.log(`New ${elementId}:`, color);
+}
+
+
 
